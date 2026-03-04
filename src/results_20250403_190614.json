@@ -1,0 +1,15 @@
+{
+  "results": [
+    {
+      "result": "Unable to proceed with the task due to lack of clear instructions on how to interact with the Supabase school database using provided supabase_tool. A detailed tool specification or an action guide is needed to proceed with the task. Without the ability to retrieve or analyze the data, I cannot generate the POC document.",
+      "raw_output": null,
+      "task_outputs": []
+    },
+    {
+      "result": "Unable to provide the 'School Data Enrichment POC' document due to insufficient information.",
+      "raw_output": null,
+      "task_outputs": []
+    }
+  ],
+  "total_batches": 2
+}

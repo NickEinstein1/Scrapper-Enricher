@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase MCP Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #3ECF8E;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        button {
+            background-color: #3ECF8E;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        button:hover {
+            background-color: #2EBF7E;
+        }
+        .result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Supabase MCP Test</h1>
+
+    <p>This page tests the connection to your Supabase database using the MCP configuration.</p>
+
+    <div>
+        <h2>Test Database Connection</h2>
+        <button id="testConnection">Test Connection</button>
+        <div id="connectionResult" class="result"></div>
+    </div>
+
+    <div>
+        <h2>View Schools</h2>
+        <button id="viewSchools">View Schools</button>
+        <div id="schoolsResult" class="result"></div>
+    </div>
+
+    <div>
+        <h2>MCP Configuration</h2>
+        <p>Your MCP configuration files:</p>
+        <ul>
+            <li><code>.vscode/mcp.json</code></li>
+            <li><code>.cursor/mcp.json</code></li>
+            <li><code>.mcp.json</code> (for Claude)</li>
+            <li><code>.windsurf/mcp.json</code></li>
+        </ul>
+        <p>Personal Access Token: <code>sbp_d389d43851756e4985e9db1ab285ca5c893b5c31</code></p>
+    </div>
+
+    <div>
+        <h2>Notes</h2>
+        <p><strong>About Punycode Warning:</strong> If you see a deprecation warning about the punycode module in Node.js, we've addressed this by installing the <code>punycode2</code> package as a userland alternative. This is used in our Node.js test scripts.</p>
+        <p>The warning is coming from a dependency in the Supabase JS client and has been properly fixed in our test scripts.</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Supabase credentials
+        const SUPABASE_URL = 'https://onpxncsesssxbpboirlj.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ucHhuY3Nlc3NzeGJwYm9pcmxqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQxMzg0MjcsImV4cCI6MjA0OTcxNDQyN30.7dfq18qKd-iOxBNj3XCbbwgrsECBB_y2s1RX5NM7WL4';
+
+        // Create a Supabase client
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // Test connection button
+        document.getElementById('testConnection').addEventListener('click', async () => {
+            const resultDiv = document.getElementById('connectionResult');
+            resultDiv.innerHTML = '<p>Testing connection...</p>';
+
+            try {
+                // Use the count() method instead of select('count(*)')
+                const { count, error } = await supabaseClient
+                    .from('schools')
+                    .select('*', { count: 'exact', head: true });
+
+                if (error) {
+                    resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+                    return;
+                }
+
+                resultDiv.innerHTML = `
+                    <p>Successfully connected to Supabase!</p>
+                    <p>Total schools: ${count}</p>
+                `;
+            } catch (err) {
+                resultDiv.innerHTML = `<p>Unexpected error: ${err.message}</p>`;
+            }
+        });
+
+        // View schools button
+        document.getElementById('viewSchools').addEventListener('click', async () => {
+            const resultDiv = document.getElementById('schoolsResult');
+            resultDiv.innerHTML = '<p>Fetching schools...</p>';
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('schools')
+                    .select('*')
+                    .limit(3);
+
+                if (error) {
+                    resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+                    return;
+                }
+
+                resultDiv.innerHTML = `
+                    <p>Successfully fetched schools:</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (err) {
+                resultDiv.innerHTML = `<p>Unexpected error: ${err.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>

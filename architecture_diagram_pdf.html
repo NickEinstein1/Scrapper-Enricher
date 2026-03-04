@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>School Data Enrichment Architecture Diagram</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        @media print {
+            body {
+                padding: 20px;
+            }
+            .no-print {
+                display: none;
+            }
+            .page-break {
+                page-break-after: always;
+            }
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .buttons {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .diagram-container {
+            margin: 30px 0;
+        }
+        .explanation {
+            margin-top: 40px;
+        }
+        h2 {
+            color: #444;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>School Data Enrichment Architecture</h1>
+        
+        <div class="buttons no-print">
+            <button onclick="window.print()">Save as PDF</button>
+            <p>Click the button above to save this document as a PDF</p>
+        </div>
+        
+        <div class="diagram-container">
+            <div class="mermaid">
+graph TD
+    subgraph "User Interface"
+        UI[User Interface]
+        RunBatch[run_batch_schools.py]
+    end
+
+    subgraph "Core System"
+        Main[src/dbenc/main.py]
+        Crew[src/dbenc/crew.py]
+        
+        subgraph "CrewAI Agents"
+            Researcher[Researcher Agent]
+            Scraper[Scraper Agent]
+            Geocoder[Geocoder Agent]
+            Reporter[Reporter Agent]
+        end
+        
+        subgraph "Tools"
+            SupabaseTool[Supabase Tool]
+            ScrapingTool[Scraping Tool]
+            GeocodingTool[Geocoding Tool]
+        end
+    end
+
+    subgraph "External Services"
+        MCP[Supabase MCP Server]
+        SupabaseDB[(Supabase Database)]
+        WebSources[Web Sources]
+        GeoServices[Geocoding Services]
+    end
+
+    subgraph "Data Storage"
+        ProcessedSchools[processed_schools.json]
+        BatchResults[batch_schools_*.json]
+    end
+
+    %% Connections
+    UI --> RunBatch
+    RunBatch --> Main
+    Main --> Crew
+    
+    Crew --> Researcher
+    Crew --> Scraper
+    Crew --> Geocoder
+    Crew --> Reporter
+    
+    Researcher --> SupabaseTool
+    Scraper --> ScrapingTool
+    Geocoder --> GeocodingTool
+    Reporter --> SupabaseTool
+    
+    SupabaseTool <--> MCP
+    MCP <--> SupabaseDB
+    
+    ScrapingTool <--> WebSources
+    GeocodingTool <--> GeoServices
+    
+    Main --> ProcessedSchools
+    Main --> BatchResults
+    
+    %% Data Flow
+    RunBatch -.-> |1. Start Process| Main
+    Main -.-> |2. Initialize Crew| Crew
+    Researcher -.-> |3. Find Schools| SupabaseTool
+    SupabaseTool -.-> |4. Query Database| MCP
+    Scraper -.-> |5. Scrape Data| ScrapingTool
+    ScrapingTool -.-> |6. Fetch School Info| WebSources
+    Geocoder -.-> |7. Add Coordinates| GeocodingTool
+    GeocodingTool -.-> |8. Get Coordinates| GeoServices
+    Reporter -.-> |9. Update Database| SupabaseTool
+    SupabaseTool -.-> |10. Update Records| MCP
+    Main -.-> |11. Save Results| BatchResults
+    Main -.-> |12. Track Processed| ProcessedSchools
+
+    classDef primary fill:#f9f,stroke:#333,stroke-width:2px
+    classDef secondary fill:#bbf,stroke:#333,stroke-width:1px
+    classDef external fill:#fbb,stroke:#333,stroke-width:1px
+    classDef storage fill:#bfb,stroke:#333,stroke-width:1px
+    
+    class Main,Crew primary
+    class Researcher,Scraper,Geocoder,Reporter,SupabaseTool,ScrapingTool,GeocodingTool secondary
+    class MCP,SupabaseDB,WebSources,GeoServices external
+    class ProcessedSchools,BatchResults storage
+            </div>
+        </div>
+        
+        <div class="explanation">
+            <h2>Architecture Overview</h2>
+            <p>The School Data Enrichment solution uses a sophisticated AI-powered workflow to gather, process, and enrich data about schools from various online sources. The system integrates with Supabase MCP (Model Context Protocol) servers for database operations and uses CrewAI agents to orchestrate the workflow.</p>
+            
+            <h2>Key Components</h2>
+            <h3>1. User Interface</h3>
+            <p><strong>run_batch_schools.py</strong>: Entry point that initiates the batch processing of schools with configurable parameters (batch size, timeout, etc.)</p>
+            
+            <h3>2. Core System</h3>
+            <p><strong>main.py</strong>: Orchestrates the workflow, initializes the database, creates the crew, and processes schools in batches</p>
+            <p><strong>crew.py</strong>: Implements the CrewAI setup with agents and tasks, manages the execution flow</p>
+            
+            <h3>3. CrewAI Agents</h3>
+            <ul>
+                <li><strong>Researcher Agent</strong>: Queries the Supabase database for schools needing enrichment</li>
+                <li><strong>Scraper Agent</strong>: Scrapes school data from web sources</li>
+                <li><strong>Geocoder Agent</strong>: Adds geographic coordinates to school records</li>
+                <li><strong>Reporter Agent</strong>: Updates the database with enriched data and generates reports</li>
+            </ul>
+            
+            <h3>4. Tools</h3>
+            <ul>
+                <li><strong>Supabase Tool</strong>: Connects to Supabase MCP servers for database operations</li>
+                <li><strong>Scraping Tool</strong>: Scrapes data from web sources</li>
+                <li><strong>Geocoding Tool</strong>: Adds geographic coordinates to school records</li>
+            </ul>
+            
+            <h3>5. External Services</h3>
+            <ul>
+                <li><strong>Supabase MCP Server</strong>: Connects AI tools directly to the Supabase database</li>
+                <li><strong>Supabase Database</strong>: Stores school data</li>
+                <li><strong>Web Sources</strong>: External websites with school information</li>
+                <li><strong>Geocoding Services</strong>: Services for converting addresses to coordinates</li>
+            </ul>
+            
+            <h3>6. Data Storage</h3>
+            <ul>
+                <li><strong>processed_schools.json</strong>: Tracks processed schools to prevent duplicate processing</li>
+                <li><strong>batch_schools_*.json</strong>: Stores results of batch processing</li>
+            </ul>
+            
+            <h2>Data Flow</h2>
+            <ol>
+                <li><strong>User initiates the process</strong> through run_batch_schools.py with batch parameters</li>
+                <li><strong>main.py initializes the system</strong> and creates the SchoolEnrichmentCrew</li>
+                <li><strong>Researcher Agent</strong> queries Supabase for schools needing enrichment</li>
+                <li><strong>Supabase Tool</strong> connects to the MCP server to retrieve school data</li>
+                <li><strong>Scraper Agent</strong> determines if each school is private or public</li>
+                <li><strong>Scraping Tool</strong> fetches detailed information from appropriate web sources</li>
+                <li><strong>Geocoder Agent</strong> processes school addresses</li>
+                <li><strong>Geocoding Tool</strong> converts addresses to precise geographic coordinates</li>
+                <li><strong>Reporter Agent</strong> validates and compiles the enriched data</li>
+                <li><strong>Supabase Tool</strong> updates the database with the enriched data</li>
+                <li><strong>main.py saves results</strong> to batch_schools_*.json files</li>
+                <li><strong>main.py tracks processed schools</strong> in processed_schools.json</li>
+            </ol>
+        </div>
+        
+        <div class="footer">
+            <p>School Data Enrichment Project - Architecture Documentation</p>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose',
+        });
+    </script>
+</body>
+</html>

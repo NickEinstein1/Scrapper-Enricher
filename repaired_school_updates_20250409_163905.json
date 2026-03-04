@@ -1,0 +1,62 @@
+[
+  {
+    "action": "update_school",
+    "school_id": "e8dbb247-1421-481d-a170-6e7605b4034e",
+    "data": {
+      "total_student_enrollment": 115,
+      "address": "2311 E. Palm Lane",
+      "city": "Phoenix",
+      "zip": 85006,
+      "latitude": 33.469218,
+      "longitude": -112.032224
+    }
+  },
+  {
+    "action": "update_school",
+    "school_id": "d7ab5d11-f6ef-42bd-b45c-936e02e415da",
+    "data": {
+      "total_student_enrollment": 115,
+      "address": "2215 North Washington Ave",
+      "city": "Scranton",
+      "zip": 18509,
+      "latitude": 41.43316,
+      "longitude": -75.639024
+    }
+  },
+  {
+    "action": "update_school",
+    "school_id": "1aafd3c2-71f2-4c46-b0e9-a6b61304654f",
+    "data": {
+      "total_student_enrollment": 305,
+      "address": "200 Trinity Way",
+      "city": "Morgantown",
+      "zip": 26505,
+      "latitude": 39.621141,
+      "longitude": -79.916272
+    }
+  },
+  {
+    "action": "update_school",
+    "school_id": "0227404d-7565-4459-a21c-0ee8e6730bcf",
+    "data": {
+      "total_student_enrollment": 51,
+      "address": "3040 Ridge Rd",
+      "city": "Highland",
+      "zip": 46322,
+      "latitude": 41.552944,
+      "longitude": -87.455099
+    }
+  },
+  {
+    "action": "update_school",
+    "school_id": "c741a005-b165-493d-ac4b-2d4d6bc997d3",
+    "data": {
+      "total_student_enrollment": 115,
+      "address": "1230 North Armstrong St.",
+      "city": "Kokomo",
+      "zip": 46901,
+      "latitude": 40.497927,
+      "longitude": -86.134706
+    }
+  }
+]

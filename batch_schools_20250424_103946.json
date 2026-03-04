@@ -1,0 +1,10 @@
+{
+  "results": [
+    {
+      "result": "{'error': 'school_id is required'}",
+      "raw_output": null,
+      "task_outputs": []
+    }
+  ],
+  "total_batches": 1
+}

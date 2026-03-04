@@ -1,0 +1,683 @@
+# tasks.yaml
+research_task:
+  description: >
+    You are working on a School Data Enrichment project to complete missing information in our school database.
+
+    TASK: Identify schools that need data enrichment by following these steps:
+    1. Use supabase_tool with action="get_schools" to retrieve up to 5 schools needing enrichment
+       - EXACT SYNTAX:
+         ```
+         Action: supabase_tool
+         Action Input: {"action": "get_schools", "limit": 5}
+         ```
+    2. For each school, check if any of these fields are missing: address, city, zip, total_student_enrollment, latitude, longitude
+    3. Return a structured JSON list with school_id, school_name, and missing_fields
+
+    CONTEXT:
+    - The database contains both public and private schools across the United States
+    - Schools may be missing various pieces of information that need to be filled in
+    - The school_id is a UUID that uniquely identifies each school and must be preserved
+    - This is the first step in our enrichment pipeline, so accuracy is critical
+    - You will be working with real schools like "SACRED HEART CATHOLIC HIGH SCHOOL" and "LITTLE FISHERS PRESCHOOL"
+    - The data you identify here will be used by other agents in subsequent tasks
+
+    IMPORTANT: The schools data is provided to you in the task context. You do NOT need to call the supabase_tool to get schools.
+    Instead, you should analyze the schools data that is already provided in your task context.
+
+    EXAMPLE TASK CONTEXT:
+    ```
+    {
+      "data": {
+        "schools": [
+          {
+            "school_id": "ee8981ae-7f29-47bf-968c-4829381e0559",
+            "school_name": "SACRED HEART CATHOLIC HIGH SCHOOL",
+            "address": "106 N. St. Joseph",
+            "city": "Morrilton",
+            "zip": 72110,
+            "total_student_enrollment": null,
+            "latitude": null,
+            "longitude": null
+          },
+          {
+            "school_id": "e6595f1f-fe60-4678-8d75-fadc940c1945",
+            "school_name": "LITTLE FISHERS PRESCHOOL",
+            "address": "2011 AUSTIN PKWY",
+            "city": "SUGAR LAND",
+            "zip": 77479,
+            "total_student_enrollment": null,
+            "latitude": null,
+            "longitude": null
+          }
+        ]
+      }
+    }
+    ```
+
+    EXAMPLE RESPONSE:
+    ```
+    [
+      {
+        "school_id": "ee8981ae-7f29-47bf-968c-4829381e0559",
+        "school_name": "SACRED HEART CATHOLIC HIGH SCHOOL",
+        "missing_fields": ["total_student_enrollment", "latitude", "longitude"]
+      },
+      {
+        "school_id": "e6595f1f-fe60-4678-8d75-fadc940c1945",
+        "school_name": "LITTLE FISHERS PRESCHOOL",
+        "missing_fields": ["total_student_enrollment", "latitude", "longitude"]
+      }
+    ]
+    ```
+  expected_output: >
+    A JSON list of schools that need enrichment, with each school containing its UUID, name, and list of missing fields.
+    Example: [
+      {
+        "school_id": "ee8981ae-7f29-47bf-968c-4829381e0559",
+        "school_name": "SACRED HEART CATHOLIC HIGH SCHOOL",
+        "missing_fields": ["total_student_enrollment", "latitude", "longitude"]
+      }
+    ]
+  agent: researcher
+
+scraping_task:
+  description: >
+    You are working on a School Data Enrichment project to complete missing information in our school database.
+
+    TASK: Scrape data for the schools identified in the research task by following these steps:
+    1. Determine if each school is private or public based on its name
+       - Private schools often have religious terms (Christian, Catholic, Lutheran, etc.)
+       - Public schools often have terms like Elementary, Middle, High School, etc.
+
+    2. Use the appropriate scraping_tool action:
+       - For private schools:
+         ```
+         Action: scraping_tool
+         Action Input: {"action": "scrape_private", "school_name": "SCHOOL NAME", "city": "CITY", "state": "STATE"}
+         ```
+       - For public schools:
+         ```
+         Action: scraping_tool
+         Action Input: {"action": "scrape_public", "school_name": "SCHOOL NAME", "city": "CITY", "state": "STATE"}
+         ```
+
+    3. Extract these fields to match our database schema: total_student_enrollment, address, city, zip, phone, school_type, religious_orientation, days_in_school_year
+
+    CONTEXT:
+    - The schools were identified in the previous research task as needing enrichment
+    - We use privateschoolreview.com for private schools and publicschoolreview.com for public schools
+    - The school_name parameter must be a string, not a JSON object or dictionary
+    - If the first attempt fails, try variations of the school name (remove special characters, try abbreviations)
+
+    IMPORTANT: You will receive the schools data from the previous task. You should use this data to determine which schools to scrape.
+    DO NOT make up random school names. Use ONLY the schools provided in the task context.
+
+    EXAMPLE TASK CONTEXT:
+    ```
+    {
+      "data": {
+        "schools": [
+          {
+            "school_id": "ee8981ae-7f29-47bf-968c-4829381e0559",
+            "school_name": "SACRED HEART CATHOLIC HIGH SCHOOL",
+            "address": "106 N. St. Joseph",
+            "city": "Morrilton",
+            "state": "AR",
+            "zip": 72110,
+            "missing_fields": ["total_student_enrollment", "latitude", "longitude"]
+          },
+          {
+            "school_id": "e6595f1f-fe60-4678-8d75-fadc940c1945",
+            "school_name": "LITTLE FISHERS PRESCHOOL",
+            "address": "2011 AUSTIN PKWY",
+            "city": "SUGAR LAND",
+            "state": "TX",
+            "zip": 77479,
+            "missing_fields": ["total_student_enrollment", "latitude", "longitude"]
+          }
+        ]
+      },
+      "previous_task_output": [
+        {
+          "school_id": "ee8981ae-7f29-47bf-968c-4829381e0559",
+          "school_name": "SACRED HEART CATHOLIC HIGH SCHOOL",
+          "missing_fields": ["total_student_enrollment", "latitude", "longitude"]
+        },
+        {
+          "school_id": "e6595f1f-fe60-4678-8d75-fadc940c1945",
+          "school_name": "LITTLE FISHERS PRESCHOOL",
+          "missing_fields": ["total_student_enrollment", "latitude", "longitude"]
+        }
+      ]
+    }
+    ```
+
+    EXAMPLE ACTIONS:
+    ```
+    Action: scraping_tool
+    Action Input: {"action": "scrape_private", "school_name": "SACRED HEART CATHOLIC HIGH SCHOOL", "city": "Morrilton", "state": "AR"}
+    ```
+
+    ```
+    Action: scraping_tool
+    Action Input: {"action": "scrape_private", "school_name": "LITTLE FISHERS PRESCHOOL", "city": "SUGAR LAND", "state": "TX"}
+    ```
+
+    EXAMPLE RESPONSE:
+    ```
+    [
+      {
+        "school_id": "ee8981ae-7f29-47bf-968c-4829381e0559",
+        "enriched_fields": {
+          "total_student_enrollment": 115,
+          "address": "106 N. St. Joseph",
+          "city": "Morrilton",
+          "state": "AR",
+          "zip": 72110,
+          "phone": "(501) 354-4821",
+          "school_type": "REGULAR ELEMENTARY OR SECONDARY",
+          "religious_orientation": "Catholic"
+        },
+        "status": "success"
+      },
+      {
+        "school_id": "e6595f1f-fe60-4678-8d75-fadc940c1945",
+        "enriched_fields": {
+          "total_student_enrollment": 85,
+          "address": "2011 AUSTIN PKWY",
+          "city": "SUGAR LAND",
+          "state": "TX",
+          "zip": 77479,
+          "phone": "(281) 565-1222",
+          "school_type": "REGULAR ELEMENTARY OR SECONDARY",
+          "religious_orientation": "Christian"
+        },
+        "status": "success"
+      }
+    ]
+    ```
+  expected_output: >
+    A JSON list of updated school data with enriched fields for each school.
+    Example: [
+      {
+        "school_id": "ee8981ae-7f29-47bf-968c-4829381e0559",
+        "enriched_fields": {
+          "total_student_enrollment": 115,
+          "address": "106 N. St. Joseph",
+          "city": "Morrilton",
+          "state": "AR",
+          "zip": 72110,
+          "phone": "(501) 354-4821",
+          "school_type": "REGULAR ELEMENTARY OR SECONDARY",
+          "religious_orientation": "Catholic"
+        },
+        "status": "success"
+      }
+    ]
+  agent: scraper
+
+geocoding_task:
+  description: >
+    You are working on a School Data Enrichment project to complete missing information in our school database.
+
+    TASK: Add geographic coordinates (latitude and longitude) to the schools from the scraping task by following these steps:
+    1. For each school, check if it has address information from the scraping task
+    2. Use the geocoding_tool with action="geocode" to obtain the coordinates
+    3. Extract the latitude and longitude from the geocoding results
+    4. Return the geocoded data in a structured format for the next task
+
+    STEP-BY-STEP INSTRUCTIONS:
+    1. First, examine the task context to find the schools that need geocoding
+       - Look for the "previous_task_output" field which contains the results from the scraping task
+       - Also check the "data" field which contains the original school data
+
+    2. For each school:
+       - Extract the school_id and school_name
+       - Extract the address information (address, city, state, zip)
+       - Format the address information for geocoding
+
+    3. For each school with address information, use one of these two formats:
+       - Option 1 (preferred):
+         ```
+         Action: geocoding_tool
+         Action Input: {"action": "geocode", "address": "STREET ADDRESS", "city": "CITY", "state": "STATE", "zip_code": "ZIP"}
+         ```
+       - Option 2:
+         ```
+         Action: geocoding_tool
+         Action Input: {"action": "geocode", "location": "FULL ADDRESS STRING"}
+         ```
+
+    4. After geocoding all schools, return a structured response including:
+       - The school_id
+       - The geocoded coordinates (latitude and longitude)
+       - The status of the geocoding operation (success or error)
+
+    CONTEXT:
+    - The schools have been processed by the scraping task and may have updated address information
+    - Accurate geocoding is critical for mapping and location-based analysis
+    - The geocoding_tool returns coordinates in the format {"status": "success", "data": {"latitude": 30.267153, "longitude": -97.743057}}
+    - The parameters must be strings, not JSON objects or dictionaries
+    - If geocoding fails with the full address, try with just city and state
+
+    IMPORTANT: You will receive the schools data from the previous tasks. You should use this data to determine which schools to geocode.
+    DO NOT make up random school addresses. Use ONLY the schools provided in the task context.
+
+    EXAMPLE TASK CONTEXT:
+    ```
+    {
+      "data": {
+        "schools": [
+          {
+            "school_id": "ee8981ae-7f29-47bf-968c-4829381e0559",
+            "school_name": "SACRED HEART CATHOLIC HIGH SCHOOL",
+            "address": "106 N. St. Joseph",
+            "city": "Morrilton",
+            "state": "AR",
+            "zip": 72110,
+            "missing_fields": ["total_student_enrollment", "latitude", "longitude"]
+          },
+          {
+            "school_id": "e6595f1f-fe60-4678-8d75-fadc940c1945",
+            "school_name": "LITTLE FISHERS PRESCHOOL",
+            "address": "2011 AUSTIN PKWY",
+            "city": "SUGAR LAND",
+            "state": "TX",
+            "zip": 77479,
+            "missing_fields": ["total_student_enrollment", "latitude", "longitude"]
+          }
+        ]
+      },
+      "previous_task_output": [
+        {
+          "school_id": "ee8981ae-7f29-47bf-968c-4829381e0559",
+          "enriched_fields": {
+            "total_student_enrollment": 115,
+            "address": "106 N. St. Joseph",
+            "city": "Morrilton",
+            "state": "AR",
+            "zip": 72110,
+            "phone": "(501) 354-4821",
+            "school_type": "REGULAR ELEMENTARY OR SECONDARY",
+            "religious_orientation": "Catholic"
+          },
+          "status": "success"
+        },
+        {
+          "school_id": "e6595f1f-fe60-4678-8d75-fadc940c1945",
+          "enriched_fields": {
+            "total_student_enrollment": 85,
+            "address": "2011 AUSTIN PKWY",
+            "city": "SUGAR LAND",
+            "state": "TX",
+            "zip": 77479,
+            "phone": "(281) 565-1222",
+            "school_type": "REGULAR ELEMENTARY OR SECONDARY",
+            "religious_orientation": "Christian"
+          },
+          "status": "success"
+        }
+      ]
+    }
+    ```
+
+    EXAMPLE ACTIONS:
+    ```
+    Action: geocoding_tool
+    Action Input: {"action": "geocode", "address": "106 N. St. Joseph", "city": "Morrilton", "state": "AR", "zip_code": "72110"}
+    ```
+
+    ```
+    Action: geocoding_tool
+    Action Input: {"action": "geocode", "address": "2011 AUSTIN PKWY", "city": "SUGAR LAND", "state": "TX", "zip_code": "77479"}
+    ```
+
+    EXAMPLE RESPONSE:
+    ```
+    [
+      {
+        "school_id": "ee8981ae-7f29-47bf-968c-4829381e0559",
+        "enriched_fields": {
+          "latitude": 35.153045,
+          "longitude": -92.740309
+        },
+        "status": "success"
+      },
+      {
+        "school_id": "e6595f1f-fe60-4678-8d75-fadc940c1945",
+        "enriched_fields": {
+          "latitude": 29.586609,
+          "longitude": -95.618186
+        },
+        "status": "success"
+      }
+    ]
+    ```
+  expected_output: >
+    A JSON list of schools with their coordinates.
+    Example: [
+      {
+        "school_id": "ee8981ae-7f29-47bf-968c-4829381e0559",
+        "enriched_fields": {
+          "latitude": 35.153045,
+          "longitude": -92.740309
+        },
+        "status": "success"
+      }
+    ]
+  agent: geocoder
+
+reporting_task:
+  description: >
+    You are working on a School Data Enrichment project to complete missing information in our school database.
+
+    TASK: Update the database with the enriched school data and create a summary report by following these steps:
+    1. Compile all the enriched data from the previous tasks (research, scraping, geocoding)
+    2. Use supabase_tool with action="update_school" to update each school with the enriched data
+    3. Prepare a summary report of the enrichment process
+
+    STEP-BY-STEP INSTRUCTIONS:
+    1. First, examine the task context to find the schools that need updating
+       - Look for the "previous_task_output" field which contains the results from the geocoding task
+       - Also check the "task_history" field which contains all previous task outputs
+       - IMPORTANT: This data is already in your context - DO NOT try to use a tool to retrieve it
+
+    2. For each school in the previous_task_output:
+       - Extract the school_id
+       - Collect all enriched data from the scraping and geocoding tasks
+       - Validate the data according to the validation requirements below
+
+    3. For each school with valid data:
+       - Call the supabase_tool with action="update_school"
+       - Include the school_id and the validated data
+       - Use the EXACT format shown in the example below
+
+    4. After updating all schools, create a summary report including:
+       - Total number of schools processed
+       - Number of successful updates
+       - Number of failed updates
+       - Details of any validation issues or errors
+
+    CONTEXT:
+    - The schools have been processed by the research, scraping, and geocoding tasks
+    - Each school has a unique school_id (UUID format) which must be used for updates
+    - The data must be validated before updating (e.g., reasonable enrollment numbers, valid coordinates)
+    - The field names must exactly match the database schema columns
+    - Update each school one at a time, not as a batch
+
+    CRITICAL FORMATTING INSTRUCTIONS:
+    - You MUST call the supabase_tool for EACH school that needs updating
+    - The Action Input MUST be a valid JSON object with the EXACT format shown below:
+      * You MUST use the "input_str" parameter
+      * Inside the "input_str" value, include a JSON string with:
+        * "action": "update_school" (always this exact string)
+        * "school_id": The UUID of the school (e.g., "ee8981ae-7f29-47bf-968c-4829381e0559")
+        * "data": An object containing ONLY the fields that need to be updated
+    - The JSON must be properly formatted with double quotes around all keys and string values
+    - All quotes inside the "input_str" value must be escaped with backslashes
+    - Example of CORRECT format:
+      ```
+      Action: supabase_tool
+      Action Input: {"input_str": "{\"action\": \"update_school\", \"school_id\": \"ee8981ae-7f29-47bf-968c-4829381e0559\", \"data\": {\"total_student_enrollment\": 115, \"latitude\": 35.153045, \"longitude\": -92.740309}}"}
+      ```
+
+    DATA VALIDATION REQUIREMENTS:
+    - Validate all data before updating:
+      * total_student_enrollment should be a positive integer (typically between 10 and 5000)
+      * latitude should be between 24 and 50 (continental US)
+      * longitude should be between -125 and -65 (continental US)
+      * phone numbers should be in format (XXX) XXX-XXXX if present
+    - Skip updating any field with invalid data and note it in your report
+
+    IMPORTANT: You will receive the schools data from the previous tasks. You should use this data to update the database.
+    DO NOT make up random school IDs or data. Use ONLY the schools and data provided in the task context.
+
+    EXAMPLE TASK CONTEXT STRUCTURE:
+    ```
+    {
+      "data": {
+        "schools": [
+          {
+            "school_id": "ee8981ae-7f29-47bf-968c-4829381e0559",
+            "school_name": "SACRED HEART CATHOLIC HIGH SCHOOL",
+            ...
+          }
+        ]
+      },
+      "previous_task_output": [
+        {
+          "school_id": "ee8981ae-7f29-47bf-968c-4829381e0559",
+          "enriched_fields": {
+            "latitude": 35.153045,
+            "longitude": -92.740309
+          },
+          "status": "success"
+        }
+      ],
+      "task_history": [
+        {
+          "task": "research_task",
+          "output": [...]
+        },
+        {
+          "task": "scraping_task",
+          "output": [...]
+        },
+        {
+          "task": "geocoding_task",
+          "output": [...]
+        }
+      ]
+    }
+    ```
+
+    EXAMPLE TASK CONTEXT:
+    ```
+    {
+      "data": {
+        "schools": [
+          {
+            "school_id": "ee8981ae-7f29-47bf-968c-4829381e0559",
+            "school_name": "SACRED HEART CATHOLIC HIGH SCHOOL",
+            "address": "106 N. St. Joseph",
+            "city": "Morrilton",
+            "state": "AR",
+            "zip": 72110,
+            "missing_fields": ["total_student_enrollment", "latitude", "longitude"]
+          },
+          {
+            "school_id": "e6595f1f-fe60-4678-8d75-fadc940c1945",
+            "school_name": "LITTLE FISHERS PRESCHOOL",
+            "address": "2011 AUSTIN PKWY",
+            "city": "SUGAR LAND",
+            "state": "TX",
+            "zip": 77479,
+            "missing_fields": ["total_student_enrollment", "latitude", "longitude"]
+          }
+        ]
+      },
+      "previous_task_output": [
+        {
+          "school_id": "ee8981ae-7f29-47bf-968c-4829381e0559",
+          "enriched_fields": {
+            "latitude": 35.153045,
+            "longitude": -92.740309
+          },
+          "status": "success"
+        },
+        {
+          "school_id": "e6595f1f-fe60-4678-8d75-fadc940c1945",
+          "enriched_fields": {
+            "latitude": 29.586609,
+            "longitude": -95.618186
+          },
+          "status": "success"
+        }
+      ],
+      "task_history": [
+        {
+          "task": "research_task",
+          "output": [
+            {
+              "school_id": "ee8981ae-7f29-47bf-968c-4829381e0559",
+              "school_name": "SACRED HEART CATHOLIC HIGH SCHOOL",
+              "missing_fields": ["total_student_enrollment", "latitude", "longitude"]
+            },
+            {
+              "school_id": "e6595f1f-fe60-4678-8d75-fadc940c1945",
+              "school_name": "LITTLE FISHERS PRESCHOOL",
+              "missing_fields": ["total_student_enrollment", "latitude", "longitude"]
+            }
+          ]
+        },
+        {
+          "task": "scraping_task",
+          "output": [
+            {
+              "school_id": "ee8981ae-7f29-47bf-968c-4829381e0559",
+              "enriched_fields": {
+                "total_student_enrollment": 115,
+                "address": "106 N. St. Joseph",
+                "city": "Morrilton",
+                "state": "AR",
+                "zip": 72110,
+                "phone": "(501) 354-4821",
+                "school_type": "REGULAR ELEMENTARY OR SECONDARY",
+                "religious_orientation": "Catholic"
+              },
+              "status": "success"
+            },
+            {
+              "school_id": "e6595f1f-fe60-4678-8d75-fadc940c1945",
+              "enriched_fields": {
+                "total_student_enrollment": 85,
+                "address": "2011 AUSTIN PKWY",
+                "city": "SUGAR LAND",
+                "state": "TX",
+                "zip": 77479,
+                "phone": "(281) 565-1222",
+                "school_type": "REGULAR ELEMENTARY OR SECONDARY",
+                "religious_orientation": "Christian"
+              },
+              "status": "success"
+            }
+          ]
+        },
+        {
+          "task": "geocoding_task",
+          "output": [
+            {
+              "school_id": "ee8981ae-7f29-47bf-968c-4829381e0559",
+              "enriched_fields": {
+                "latitude": 35.153045,
+                "longitude": -92.740309
+              },
+              "status": "success"
+            },
+            {
+              "school_id": "e6595f1f-fe60-4678-8d75-fadc940c1945",
+              "enriched_fields": {
+                "latitude": 29.586609,
+                "longitude": -95.618186
+              },
+              "status": "success"
+            }
+          ]
+        }
+      ]
+    }
+    ```
+
+    EXAMPLE ACTIONS:
+
+    First, validate the data for each school:
+    ```
+    # Validating data for SACRED HEART CATHOLIC HIGH SCHOOL
+    - School ID: ee8981ae-7f29-47bf-968c-4829381e0559
+    - Total Student Enrollment: 115 ✓ (valid: positive integer within range)
+    - Latitude: 35.153045 ✓ (valid: within continental US)
+    - Longitude: -92.740309 ✓ (valid: within continental US)
+    ```
+
+    Then, update each school with the validated data:
+    ```
+    Action: supabase_tool
+    Action Input: {"action": "update_school", "school_id": "ee8981ae-7f29-47bf-968c-4829381e0559", "data": {"total_student_enrollment": 115, "latitude": 35.153045, "longitude": -92.740309}}
+    ```
+
+    IMPORTANT: The Action Input MUST include the school_id and data fields exactly as shown above with proper JSON formatting.
+
+    ```
+    Action: supabase_tool
+    Action Input: {"action": "update_school", "school_id": "e6595f1f-fe60-4678-8d75-fadc940c1945", "data": {"total_student_enrollment": 85, "latitude": 29.586609, "longitude": -95.618186}}
+    ```
+
+    After updating all schools, create a detailed report:
+    ```
+    # School Data Enrichment Report
+
+    ## Summary
+    - Total Schools Processed: 2
+    - Successfully Updated: 2
+    - Failed Updates: 0
+    - Fields Updated: total_student_enrollment, latitude, longitude
+
+    ## Details
+    1. SACRED HEART CATHOLIC HIGH SCHOOL (ee8981ae-7f29-47bf-968c-4829381e0559)
+       - Updated Fields: total_student_enrollment (115), latitude (35.153045), longitude (-92.740309)
+       - Status: Success
+
+    2. LITTLE FISHERS PRESCHOOL (e6595f1f-fe60-4678-8d75-fadc940c1945)
+       - Updated Fields: total_student_enrollment (85), latitude (29.586609), longitude (-95.618186)
+       - Status: Success
+    ```
+
+    EXAMPLE RESPONSE:
+    ```markdown
+    # School Data Enrichment Report
+
+    ## Summary
+    - Total Schools Processed: 2
+    - Successfully Updated: 2
+    - Failed Updates: 0
+
+    ## Successfully Updated Schools
+    1. SACRED HEART CATHOLIC HIGH SCHOOL (ee8981ae-7f29-47bf-968c-4829381e0559)
+       - Updated Fields: total_student_enrollment, latitude, longitude
+    2. LITTLE FISHERS PRESCHOOL (e6595f1f-fe60-4678-8d75-fadc940c1945)
+       - Updated Fields: total_student_enrollment, latitude, longitude
+
+    ## Failed Updates
+    None
+
+    ## Recommendations
+    - Improve error handling for geocoding edge cases
+    - Add validation for school names before scraping
+    - Consider using a more comprehensive data source for private schools
+    ```
+  expected_output: >
+    A comprehensive Markdown report documenting the school data enrichment process.
+    Example:
+    ```markdown
+    # School Data Enrichment Report
+
+    ## Summary
+    - Total Schools Processed: 2
+    - Successfully Updated: 2
+    - Failed Updates: 0
+
+    ## Successfully Updated Schools
+    1. SACRED HEART CATHOLIC HIGH SCHOOL (ee8981ae-7f29-47bf-968c-4829381e0559)
+       - Updated Fields: total_student_enrollment, latitude, longitude
+    2. LITTLE FISHERS PRESCHOOL (e6595f1f-fe60-4678-8d75-fadc940c1945)
+       - Updated Fields: total_student_enrollment, latitude, longitude
+
+    ## Failed Updates
+    None
+
+    ## Recommendations
+    - Improve error handling for geocoding edge cases
+    - Add validation for school names before scraping
+    - Consider using a more comprehensive data source for private schools
+    ```
+  agent: reporter

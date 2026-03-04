@@ -1,0 +1,10 @@
+{
+  "results": [
+    {
+      "result": "As a School Data Quality Specialist, I have attempted to update the enriched school data in the database using the provided school data. However, I encountered an error stating that the school_id is required. I need to provide the correct school_id for each school before proceeding with the updates.",
+      "raw_output": null,
+      "task_outputs": []
+    }
+  ],
+  "total_batches": 1
+}

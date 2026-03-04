@@ -1,0 +1,149 @@
+2025-04-22 00:04:15,207 - httpx - INFO - HTTP Request: GET https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json "HTTP/1.1 200 OK"
+2025-04-22 00:04:19,591 - __main__ - INFO - Starting School Data Enrichment with REAL DATA
+2025-04-22 00:04:19,591 - __main__ - INFO - Parameters: batch_size=2, use_mock=False, timeout=600
+2025-04-22 00:04:19,591 - __main__ - INFO - Results will be saved to real_results_20250422_000419.json
+2025-04-22 00:04:19,592 - src.dbenc.main - INFO - Starting run function
+2025-04-22 00:04:19,889 - src.dbenc.tools.supabase_tool - INFO - Connected to Supabase
+2025-04-22 00:04:20,377 - httpx - INFO - HTTP Request: GET https://onpxncsesssxbpboirlj.supabase.co/rest/v1/schools?select=%2A "HTTP/2 200 OK"
+2025-04-22 00:04:20,432 - src.dbenc.main - INFO - Database initialization result: {'status': 'Database already initialized', 'school_count': 1000}
+2025-04-22 00:04:20,432 - src.dbenc.main - INFO - Creating SchoolEnrichmentCrew with mock_mode=False and timeout=600
+2025-04-22 00:04:20,432 - src.dbenc.crew - INFO - Loading agents from src/dbenc/config/agents.yaml
+2025-04-22 00:04:20,446 - src.dbenc.crew - INFO - Loading tasks from src/dbenc/config/tasks.yaml
+2025-04-22 00:04:20,469 - src.dbenc.crew - INFO - YAML configurations loaded successfully
+2025-04-22 00:04:20,469 - src.dbenc.crew - INFO - Initializing tools with mock_mode=False
+2025-04-22 00:04:20,777 - src.dbenc.tools.supabase_tool - INFO - Connected to Supabase
+2025-04-22 00:04:20,796 - src.dbenc.crew - INFO - Creating agents
+2025-04-22 00:04:20,796 - src.dbenc.main - INFO - SchoolEnrichmentCrew created successfully
+2025-04-22 00:04:20,797 - src.dbenc.main - INFO - Creating SupabaseTool
+2025-04-22 00:04:21,099 - src.dbenc.tools.supabase_tool - INFO - Connected to Supabase
+2025-04-22 00:04:21,099 - src.dbenc.main - INFO - Getting schools needing enrichment
+2025-04-22 00:04:21,100 - src.dbenc.main - INFO - Found schools file: schools_to_process_20250421_221551.json
+2025-04-22 00:04:21,102 - src.dbenc.main - INFO - Found 3 schools needing enrichment
+2025-04-22 00:04:21,103 - src.dbenc.main - INFO - School 1: {'school_id': 'ee8981ae-7f29-47bf-968c-4829381e0559', 'school_name': 'SACRED HEART CATHOLIC HIGH SCHOOL', 'address': '106 N. St. Joseph', 'city': 'Morrilton', 'zip': 72110, 'total_student_enrollment': 115, 'latitude': 35.153045, 'longitude': -92.740309, 'missing_fields': ['total_student_enrollment', 'latitude', 'longitude']}
+2025-04-22 00:04:21,103 - src.dbenc.main - INFO - School 2: {'school_id': 'e6595f1f-fe60-4678-8d75-fadc940c1945', 'school_name': 'LITTLE FISHERS PRESCHOOL', 'address': '2011 AUSTIN PKWY', 'city': 'SUGAR LAND', 'zip': 77479, 'total_student_enrollment': 115, 'latitude': 29.586609, 'longitude': -95.618186, 'missing_fields': ['total_student_enrollment', 'latitude', 'longitude']}
+2025-04-22 00:04:21,103 - src.dbenc.main - INFO - School 3: {'school_id': 'd526218c-dadf-4bfe-a518-d3bf2e21f364', 'school_name': 'LEARNING TREE WEST PALMDALE', 'address': '39625 20Th St W', 'city': 'Palmdale', 'zip': 93551, 'total_student_enrollment': 80, 'latitude': 34.603032, 'longitude': -118.166468, 'missing_fields': ['total_student_enrollment', 'latitude', 'longitude']}
+2025-04-22 00:04:21,103 - src.dbenc.main - INFO - Processing batch 1 with 2 schools
+2025-04-22 00:04:21,103 - src.dbenc.crew - INFO - Running crew with 2 schools
+2025-04-22 00:04:21,105 - src.dbenc.tools.supabase_tool - INFO - Running SupabaseTool with action: get_schools, kwargs: {'limit': 1}
+2025-04-22 00:04:21,568 - httpx - INFO - HTTP Request: GET https://onpxncsesssxbpboirlj.supabase.co/rest/v1/schools?select=%2A&limit=1 "HTTP/2 200 OK"
+2025-04-22 00:04:21,570 - src.dbenc.tools.supabase_tool - INFO - Retrieved 1 schools from the database
+2025-04-22 00:04:21,571 - src.dbenc.tools.supabase_tool - INFO - Returning 1 schools with missing fields
+2025-04-22 00:04:21,572 - src.dbenc.crew - INFO - Supabase tool test: True
+2025-04-22 00:04:21,572 - src.dbenc.crew - INFO - Researcher agent created
+2025-04-22 00:04:21,578 - src.dbenc.tools.scraping_tool - INFO - Running ScrapingTool with action: help, kwargs: {}
+2025-04-22 00:04:21,578 - src.dbenc.crew - INFO - Scraping tool test: True
+2025-04-22 00:04:21,579 - src.dbenc.crew - INFO - Scraper agent created
+2025-04-22 00:04:21,585 - src.dbenc.tools.geocoding_tool - INFO - Running GeocodingTool with action: help, kwargs: {}
+2025-04-22 00:04:21,585 - src.dbenc.crew - INFO - Geocoding tool test: True
+2025-04-22 00:04:21,586 - src.dbenc.crew - INFO - Geocoder agent created
+2025-04-22 00:04:21,589 - src.dbenc.tools.supabase_tool - INFO - Running SupabaseTool with action: help, kwargs: {}
+2025-04-22 00:04:21,589 - src.dbenc.crew - INFO - Supabase tool (reporter) test: True
+2025-04-22 00:04:21,591 - src.dbenc.crew - INFO - Reporter agent created
+2025-04-22 00:04:21,591 - src.dbenc.crew - INFO - Research task context: [{'description': 'School data to enrich', 'expected_output': 'Enriched school data', 'data': {'schools': [{'school_id': 'ee8981ae-7f29-47bf-968c-4829381e0559', 'school_name': 'SACRED HEART CATHOLIC HIGH SCHOOL', 'address': '106 N. St. Joseph', 'city': 'Morrilton', 'zip': 72110, 'total_student_enrollment': 115, 'latitude': 35.153045, 'longitude': -92.740309, 'missing_fields': ['total_student_enrollment', 'latitude', 'longitude']}, {'school_id': 'e6595f1f-fe60-4678-8d75-fadc940c1945', 'school_name': 'LITTLE FISHERS PRESCHOOL', 'address': '2011 AUSTIN PKWY', 'city': 'SUGAR LAND', 'zip': 77479, 'total_student_enrollment': 115, 'latitude': 29.586609, 'longitude': -95.618186, 'missing_fields': ['total_student_enrollment', 'latitude', 'longitude']}], 'current_year': '2025'}}]
+2025-04-22 00:04:21,609 - src.dbenc.crew - INFO - Starting crew kickoff with timeout
+2025-04-22 00:04:21,697 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-3.5-turbo; provider = openai
+2025-04-22 00:04:23,768 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 00:04:23,783 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-04-22 00:04:23,830 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-3.5-turbo; provider = openai
+2025-04-22 00:04:25,285 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 00:04:25,291 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-04-22 00:04:25,319 - src.dbenc.tools.scraping_tool - INFO - Running ScrapingTool with action: scrape_private, kwargs: {}
+2025-04-22 00:04:25,335 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-3.5-turbo; provider = openai
+2025-04-22 00:04:25,845 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 00:04:25,852 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-04-22 00:04:25,930 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-3.5-turbo; provider = openai
+2025-04-22 00:04:26,778 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 00:04:26,781 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-04-22 00:04:26,830 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-3.5-turbo; provider = openai
+2025-04-22 00:04:28,944 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 00:04:28,946 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-04-22 00:04:28,952 - src.dbenc.tools.supabase_tool - INFO - Running SupabaseTool with action: update_school, kwargs: {}
+2025-04-22 00:04:28,958 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-3.5-turbo; provider = openai
+2025-04-22 00:04:30,967 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 00:04:30,975 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-04-22 00:04:30,991 - src.dbenc.tools.supabase_tool - INFO - Running SupabaseTool with action: update_school, kwargs: {}
+2025-04-22 00:04:31,002 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-3.5-turbo; provider = openai
+2025-04-22 00:04:31,531 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 00:04:31,542 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-04-22 00:04:31,623 - src.dbenc.crew - INFO - Crew execution completed successfully
+2025-04-22 00:04:31,623 - src.dbenc.main - INFO - Successfully processed batch 1
+2025-04-22 00:04:31,623 - src.dbenc.main - INFO - Result for batch 1: {
+  "result": "{'error': 'school_id is required'}",
+  "raw_output": null,
+  "task_outputs": []
+}
+2025-04-22 00:04:31,623 - src.dbenc.main - INFO - Processing batch 2 with 1 schools
+2025-04-22 00:04:31,624 - src.dbenc.crew - INFO - Running crew with 1 schools
+2025-04-22 00:04:31,624 - src.dbenc.crew - INFO - Research task context: [{'description': 'School data to enrich', 'expected_output': 'Enriched school data', 'data': {'schools': [{'school_id': 'd526218c-dadf-4bfe-a518-d3bf2e21f364', 'school_name': 'LEARNING TREE WEST PALMDALE', 'address': '39625 20Th St W', 'city': 'Palmdale', 'zip': 93551, 'total_student_enrollment': 80, 'latitude': 34.603032, 'longitude': -118.166468, 'missing_fields': ['total_student_enrollment', 'latitude', 'longitude']}], 'current_year': '2025'}}]
+2025-04-22 00:04:31,632 - src.dbenc.crew - INFO - Starting crew kickoff with timeout
+2025-04-22 00:04:31,686 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-3.5-turbo; provider = openai
+2025-04-22 00:04:32,672 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 00:04:32,679 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-04-22 00:04:32,736 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-3.5-turbo; provider = openai
+2025-04-22 00:04:33,614 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 00:04:33,621 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-04-22 00:04:33,703 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-3.5-turbo; provider = openai
+2025-04-22 00:04:34,673 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 00:04:34,680 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-04-22 00:04:34,732 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-3.5-turbo; provider = openai
+2025-04-22 00:04:37,000 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 00:04:37,002 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-04-22 00:04:37,007 - src.dbenc.tools.supabase_tool - INFO - Running SupabaseTool with action: update_school, kwargs: {}
+2025-04-22 00:04:37,015 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-3.5-turbo; provider = openai
+2025-04-22 00:04:38,284 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 00:04:38,288 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-04-22 00:04:38,299 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-3.5-turbo; provider = openai
+2025-04-22 00:04:41,524 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 00:04:41,531 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-04-22 00:04:41,542 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-3.5-turbo; provider = openai
+2025-04-22 00:04:43,702 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 00:04:43,704 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-04-22 00:04:43,714 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-3.5-turbo; provider = openai
+2025-04-22 00:04:45,894 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 00:04:45,903 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-04-22 00:04:46,051 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-3.5-turbo; provider = openai
+2025-04-22 00:04:48,190 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 00:04:48,192 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-04-22 00:04:48,200 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-3.5-turbo; provider = openai
+2025-04-22 00:04:50,342 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 00:04:50,344 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-04-22 00:04:50,356 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-3.5-turbo; provider = openai
+2025-04-22 00:04:52,431 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 00:04:52,433 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-04-22 00:04:52,443 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-3.5-turbo; provider = openai
+2025-04-22 00:04:54,036 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 00:04:54,040 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-04-22 00:05:06,532 - src.dbenc.crew - INFO - Crew execution completed successfully
+2025-04-22 00:05:06,532 - src.dbenc.main - INFO - Successfully processed batch 2
+2025-04-22 00:05:06,532 - src.dbenc.main - INFO - Result for batch 2: {
+  "result": "As there were no schools processed yet, the summary report is empty. I will continue with updating the schools and generating the summary report based on actual data enrichment.",
+  "raw_output": null,
+  "task_outputs": []
+}
+2025-04-22 00:05:06,533 - src.dbenc.main - INFO - Results saved to real_results_20250422_000419.json
+2025-04-22 00:05:06,534 - __main__ - INFO - Execution completed in 46.94 seconds
+2025-04-22 00:05:06,534 - __main__ - INFO - Processed 2 batches
+2025-04-22 00:05:06,534 - __main__ - INFO - Results saved to real_results_20250422_000419.json
+2025-04-22 00:05:06,547 - __main__ - INFO - Total batches: 2
+2025-04-22 00:05:06,547 - __main__ - INFO - No errors found in the results
+2025-04-22 00:05:06,547 - __main__ - INFO - Successful updates: 0
+2025-04-22 00:05:06,547 - __main__ - INFO - Failed updates: 1

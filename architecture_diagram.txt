@@ -1,0 +1,61 @@
+School Data Enrichment Architecture
+================================
+
++----------------------+        +------------------------+        +------------------------+
+|   User Interface     |        |     Core System        |        |   External Services    |
+|                      |        |                        |        |                        |
+|  +--------------+    |        |  +----------------+    |        |  +----------------+    |
+|  | User         |    |        |  | main.py        |    |        |  | Supabase MCP   |    |
+|  +--------------+    |        |  +----------------+    |        |  | Server         |    |
+|         |            |        |         |              |        |  +----------------+    |
+|         v            |        |         v              |        |         ^              |
+|  +--------------+    |        |  +----------------+    |        |         |              |
+|  | run_batch_   |----+------->|  | crew.py        |<---+--------+-------->|              |
+|  | schools.py   |    |        |  +----------------+    |        |         v              |
+|  +--------------+    |        |         |              |        |  +----------------+    |
++----------------------+        |         |              |        |  | Supabase       |    |
+                                |         v              |        |  | Database       |    |
+                                |  +----------------+    |        |  +----------------+    |
+                                |  | CrewAI Agents  |    |        |         ^              |
+                                |  |                |    |        |         |              |
+                                |  | - Researcher   |<---+--------+-------->|              |
+                                |  | - Scraper      |<---+--------+-------->+----------------+
+                                |  | - Geocoder     |<---+--------+-------->|  Web Sources  |
+                                |  | - Reporter     |    |        |         +----------------+
+                                |  +----------------+    |        |                          
+                                |         |              |        |         +----------------+
+                                |         v              |        |         | Geocoding      |
+                                |  +----------------+    |        |         | Services       |
+                                |  | Tools          |<---+--------+-------->|                |
+                                |  |                |    |        |         +----------------+
+                                |  | - SupabaseTool |    |        |                          
+                                |  | - ScrapingTool |    |        +------------------------+
+                                |  | - GeocodingTool|    |                                  
+                                |  +----------------+    |        +------------------------+
+                                |         |              |        |     Data Storage       |
+                                |         v              |        |                        |
+                                |  +----------------+    |        |  +----------------+    |
+                                |  | Results        |----+------->|  | processed_     |    |
+                                |  |                |    |        |  | schools.json   |    |
+                                |  +----------------+    |        |  +----------------+    |
+                                +------------------------+        |                        |
+                                                                 |  +----------------+    |
+                                                                 |  | batch_schools_ |    |
+                                                                 |  | *.json         |    |
+                                                                 |  +----------------+    |
+                                                                 +------------------------+
+
+Data Flow:
+---------
+1. User initiates process through run_batch_schools.py
+2. main.py initializes system and creates SchoolEnrichmentCrew
+3. Researcher Agent queries Supabase for schools needing enrichment
+4. Supabase Tool connects to MCP server to retrieve school data
+5. Scraper Agent determines if each school is private or public
+6. Scraping Tool fetches detailed information from web sources
+7. Geocoder Agent processes school addresses
+8. Geocoding Tool converts addresses to precise coordinates
+9. Reporter Agent validates and compiles the enriched data
+10. Supabase Tool updates the database with the enriched data
+11. main.py saves results to batch_schools_*.json files
+12. main.py tracks processed schools in processed_schools.json

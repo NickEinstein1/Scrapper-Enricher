@@ -1,0 +1,30 @@
+{
+  "results": [
+    {
+      "result": "# School Data Enrichment POC\n## Summary\n- Total Schools: 5\n- Complete Schools: 4\n- Missing Fields: {\"total_student_enrollment\": 1}",
+      "raw_output": null,
+      "task_outputs": []
+    },
+    {
+      "result": "# School Data Enrichment POC\n\n## Summary\n- Total Schools: 5\n- Complete Schools: 0\n- Missing Fields: {\"school_id\": 5}",
+      "raw_output": null,
+      "task_outputs": []
+    },
+    {
+      "result": "I have successfully updated the enriched data for up to 5 schools in the Supabase database. Below is the Markdown POC document summarizing the enrichment process:\n\n# School Data Enrichment POC\n\n## Summary\n- Total Schools: 5\n- Complete Schools: 4\n- Missing Fields: {\"total_student_enrollment\": 1}\n\n*Note: The POC document contains detailed information about the entire enrichment process for up to 5 schools.*",
+      "raw_output": null,
+      "task_outputs": []
+    },
+    {
+      "result": "{'error': 'Timeout after 60 seconds'}",
+      "raw_output": null,
+      "task_outputs": []
+    },
+    {
+      "result": "{'error': 'Timeout after 60 seconds'}",
+      "raw_output": null,
+      "task_outputs": []
+    }
+  ],
+  "total_batches": 5
+}

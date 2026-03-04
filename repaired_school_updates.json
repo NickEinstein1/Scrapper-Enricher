@@ -1,0 +1,62 @@
+[
+  {
+    "action": "update_school",
+    "school_id": "9c9c989b-9455-44fc-b7f6-718ac9a22379",
+    "data": {
+      "total_student_enrollment": 600,
+      "address": "1800 U.S. 190 Business",
+      "city": "Nolanville",
+      "zip": 76559,
+      "latitude": 31.083977,
+      "longitude": -97.634029
+    }
+  },
+  {
+    "action": "update_school",
+    "school_id": "4c032cbc-d947-4c79-a425-da48051f0d31",
+    "data": {
+      "total_student_enrollment": 450,
+      "address": "401 N VAL VERDE RD",
+      "city": "Donna",
+      "zip": 78537,
+      "latitude": 26.179526,
+      "longitude": -98.082921
+    }
+  },
+  {
+    "action": "update_school",
+    "school_id": "85db917d-1cca-477a-a26d-882d7e5da979",
+    "data": {
+      "total_student_enrollment": 700,
+      "address": "10595 U.S. 17",
+      "city": "Myrtle Beach",
+      "zip": 29572,
+      "latitude": 33.796475,
+      "longitude": -78.747431
+    }
+  },
+  {
+    "action": "update_school",
+    "school_id": "fe336077-dd61-41e0-8788-b1cb3340f6d7",
+    "data": {
+      "total_student_enrollment": 550,
+      "address": "989 122nd Street",
+      "city": "Chippewa Falls",
+      "zip": 54729,
+      "latitude": 44.857117,
+      "longitude": -91.42659
+    }
+  },
+  {
+    "action": "update_school",
+    "school_id": "91e7401c-e442-4dc3-8703-b7b4c6ab460d",
+    "data": {
+      "total_student_enrollment": 400,
+      "address": "67055 Gratiot",
+      "city": "Richmond",
+      "zip": 48062,
+      "latitude": 42.795339,
+      "longitude": -82.737298
+    }
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "school_id": "sample1-uuid-1234-5678-90abcdef",
+    "data": {
+      "school_name": "SAMPLE SCHOOL 1",
+      "address": "123 Sample St",
+      "city": "Sample City",
+      "zip": 12345,
+      "total_student_enrollment": 500
+    }
+  },
+  {
+    "school_id": "sample2-uuid-1234-5678-90abcdef",
+    "data": {
+      "school_name": "SAMPLE SCHOOL 2",
+      "address": "456 Sample Ave",
+      "city": "Sample Town",
+      "zip": 67890,
+      "total_student_enrollment": 750
+    }
+  }
+]

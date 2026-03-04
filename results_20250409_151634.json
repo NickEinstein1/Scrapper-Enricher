@@ -1,0 +1,10 @@
+{
+  "results": [
+    {
+      "result": "# School Data Enrichment Summary\n- Total Schools: 5\n- Successful Updates: 0\n- Failed Updates: 5\n\nThe enrichment process encountered issues with updating the data for all schools. Further investigation is needed to address the errors and ensure accurate data enrichment in the Supabase database.",
+      "raw_output": null,
+      "task_outputs": []
+    }
+  ],
+  "total_batches": 1
+}

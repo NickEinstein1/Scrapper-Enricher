@@ -1,0 +1,10 @@
+{
+  "results": [
+    {
+      "result": "Based on the task instructions, the final answer should include updating the database with the enriched school data for each school that meets the validation requirements. Once all schools are updated, a summary report should be generated with the total number of schools processed, the number of successful updates, the number of failed updates, and details of any validation issues or errors. The report should follow a specific format provided in the task instructions.",
+      "raw_output": null,
+      "task_outputs": []
+    }
+  ],
+  "total_batches": 1
+}

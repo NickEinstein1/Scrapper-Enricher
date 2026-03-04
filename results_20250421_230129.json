@@ -1,0 +1,10 @@
+{
+  "results": [
+    {
+      "result": "I have to compile all the enriched data for each school, update each school with the enriched data using supabase_tool, and prepare a detailed Markdown report summarizing the enrichment process.",
+      "raw_output": null,
+      "task_outputs": []
+    }
+  ],
+  "total_batches": 1
+}

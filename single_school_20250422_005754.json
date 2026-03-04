@@ -1,0 +1,20 @@
+{
+  "results": [
+    {
+      "result": "{'error': \"Error in crew kickoff: 'SchoolEnrichmentCrew' object has no attribute 'tasks' (all 3 attempts failed)\"}",
+      "raw_output": null,
+      "task_outputs": []
+    },
+    {
+      "result": "{'error': \"Error in crew kickoff: 'SchoolEnrichmentCrew' object has no attribute 'tasks' (all 3 attempts failed)\"}",
+      "raw_output": null,
+      "task_outputs": []
+    },
+    {
+      "result": "{'error': \"Error in crew kickoff: 'SchoolEnrichmentCrew' object has no attribute 'tasks' (all 3 attempts failed)\"}",
+      "raw_output": null,
+      "task_outputs": []
+    }
+  ],
+  "total_batches": 3
+}

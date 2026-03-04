@@ -1,0 +1,53 @@
+[
+  {
+    "school_id": "ee8981ae-7f29-47bf-968c-4829381e0559",
+    "data": {
+      "school_name": "SACRED HEART CATHOLIC HIGH SCHOOL",
+      "address": "106 N. St. Joseph",
+      "city": "Morrilton",
+      "zip": 72110,
+      "total_student_enrollment": 115,
+      "latitude": 35.153045,
+      "longitude": -92.740309,
+      "missing_fields": [
+        "total_student_enrollment",
+        "latitude",
+        "longitude"
+      ]
+    }
+  },
+  {
+    "school_id": "e6595f1f-fe60-4678-8d75-fadc940c1945",
+    "data": {
+      "school_name": "LITTLE FISHERS PRESCHOOL",
+      "address": "2011 AUSTIN PKWY",
+      "city": "SUGAR LAND",
+      "zip": 77479,
+      "total_student_enrollment": 115,
+      "latitude": 29.586609,
+      "longitude": -95.618186,
+      "missing_fields": [
+        "total_student_enrollment",
+        "latitude",
+        "longitude"
+      ]
+    }
+  },
+  {
+    "school_id": "d526218c-dadf-4bfe-a518-d3bf2e21f364",
+    "data": {
+      "school_name": "LEARNING TREE WEST PALMDALE",
+      "address": "39625 20Th St W",
+      "city": "Palmdale",
+      "zip": 93551,
+      "total_student_enrollment": 80,
+      "latitude": 34.603032,
+      "longitude": -118.166468,
+      "missing_fields": [
+        "total_student_enrollment",
+        "latitude",
+        "longitude"
+      ]
+    }
+  }
+]

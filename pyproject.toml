@@ -1,0 +1,23 @@
+[project]
+name = "dbenc"
+version = "0.1.0"
+description = "Dbenc using crewAI"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "crewai[tools]>=0.108.0,<1.0.0"
+]
+
+[project.scripts]
+dbenc = "dbenc.main:run"
+run_crew = "dbenc.main:run"
+train = "dbenc.main:train"
+replay = "dbenc.main:replay"
+test = "dbenc.main:test"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "crew"

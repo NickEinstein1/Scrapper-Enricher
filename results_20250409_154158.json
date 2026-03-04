@@ -1,0 +1,10 @@
+{
+  "results": [
+    {
+      "result": "# School Data Enrichment POC\n## Summary\n- Total Schools: 5\n- Complete Schools: 4\n- Missing Fields: {\"total_student_enrollment\": 1}",
+      "raw_output": null,
+      "task_outputs": []
+    }
+  ],
+  "total_batches": 1
+}

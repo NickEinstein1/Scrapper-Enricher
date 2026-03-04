@@ -1,0 +1,10 @@
+{
+  "results": [
+    {
+      "result": "As a School Data Quality Specialist, I have updated the enriched data for up to 5 schools by using the supabase_tool with the correct action input for each school ID. The POC document with a summary report of the enrichment process will be prepared according to the expected criteria.",
+      "raw_output": null,
+      "task_outputs": []
+    }
+  ],
+  "total_batches": 1
+}

@@ -1,0 +1,415 @@
+School Data Enrichment Project Documentation
+
+Overview
+--------
+This project is designed to enrich school data by:
+1. Retrieving schools from a Supabase database
+2. Scraping additional information from school review websites
+3. Geocoding school addresses to obtain precise coordinates
+4. Updating the database with the enriched data
+
+The project uses a combination of direct database access, web scraping, and geocoding tools, orchestrated by AI agents using the crewAI framework.
+
+Project Structure
+----------------
+src/
+├── dbenc/
+│   ├── config/
+│   │   ├── agents.yaml      # Agent configurations
+│   │   └── tasks.yaml       # Task configurations
+│   ├── tools/
+│   │   ├── supabase_tool.py # Database interaction
+│   │   ├── scraping_tool.py # Web scraping functionality
+│   │   └── geocoding_tool.py # Geocoding functionality
+│   ├── crew.py              # AI crew implementation
+│   └── main.py              # Main entry point
+├── process_supabase_schools.py # Process schools from Supabase
+├── direct_process.py        # Direct processing with sample data
+├── extract_school_data.py   # Extract data from results
+├── update_db_schools.py     # Update database with enriched data
+├── view_enriched_schools.py # View enriched school data
+├── batch_process.py         # Process multiple batches
+├── error_handling.py        # Error handling utilities
+├── test_mcp_connection.js   # Test Supabase MCP connection
+│
+├── .vscode/                 # VS Code configuration
+│   └── mcp.json             # MCP configuration for VS Code
+├── .cursor/                 # Cursor configuration
+│   └── mcp.json             # MCP configuration for Cursor
+├── .mcp.json                # MCP configuration for Claude
+│
+└── docs/                    # Documentation
+    ├── school_data_enrichment_workflow.md
+    ├── quick_start_guide.md
+    ├── supabase_mcp_integration.md
+    └── supabase_mcp_prompts.md
+
+Prerequisites
+------------
+1. Python 3.8+
+2. Supabase account and API credentials
+3. OpenAI API key (for AI agent functionality)
+4. Required Python packages (install with `pip install -r requirements.txt`)
+
+Configuration
+------------
+1. Create a `.env` file in the project root with the following variables:
+   ```
+   OPENAI_API_KEY=your_openai_api_key
+   SUPABASE_URL=your_supabase_url
+   SUPABASE_KEY=your_supabase_key
+   SUPABASE_ANON_KEY=your_supabase_anon_key
+   MODEL=gpt-4
+   ```
+
+2. Configure Supabase MCP for AI tool integration:
+   - Create a Personal Access Token (PAT) in your Supabase account
+   - Use the provided configuration files for your preferred AI tool:
+     - VS Code: `.vscode/mcp.json`
+     - Cursor: `.cursor/mcp.json`
+     - Claude: `.mcp.json`
+     - Windsurf: `.windsurf/mcp.json`
+   - Test the connection using the `test_mcp_connection.js` script
+
+3. Ensure your Supabase database has a `schools` table with the following fields:
+   - `school_id` (UUID)
+   - `school_name` (String)
+   - `address` (String)
+   - `city` (String)
+   - `zip` (Integer)
+   - `total_student_enrollment` (Integer)
+   - `latitude` (Float)
+   - `longitude` (Float)
+
+Complete Workflow
+----------------
+
+The School Data Enrichment Project follows a structured workflow to ensure efficient and accurate data processing. Here's the complete step-by-step guide:
+
+### 1. Preparation Phase
+
+1. **Get Unprocessed Schools**:
+   ```bash
+   python process_supabase_schools.py --batch_size 5
+   ```
+   - Retrieves schools from Supabase that haven't been processed yet
+   - Creates a `schools_to_process_TIMESTAMP.json` file
+   - Creates a `repaired_school_updates_TIMESTAMP.json` file
+   - Marks these schools as processed in the tracking database
+   - Prevents duplicate processing of schools across different runs
+
+2. **View Processed Schools** (optional):
+   ```bash
+   python process_supabase_schools.py --view-processed
+   ```
+   - Displays a list of all schools that have been processed
+   - Shows when each school was processed
+   - Shows which batch file each school came from
+
+### 2. Processing Phase
+
+1. **Run the CrewAI System**:
+   ```bash
+   python -m dbenc.main run --batch_size 5 --timeout 300
+   ```
+   - Processes the schools using the CrewAI agents
+   - Timeout set to 300 seconds for optimal performance
+   - Batch size determines how many schools to process at once
+   - Uses the schools prepared in the previous step
+
+2. **Extract School Data**:
+   ```bash
+   python src/extract_school_data.py
+   ```
+   - Extracts enriched school data from the results
+   - Skips schools that have already been processed
+   - Creates a repaired JSON file with the extracted data
+   - If no schools are found in the results, gets unprocessed schools directly from Supabase
+
+### 3. Database Update Phase
+
+1. **Update the Database**:
+   ```bash
+   # Find the latest repaired JSON file
+   latest_file=$(ls -t repaired_school_updates_*.json | head -1)
+
+   # Update the database
+   python src/update_db_schools.py $latest_file
+   ```
+   - Updates the Supabase database with the enriched data
+   - Uses robust error handling with retry mechanisms and exponential backoff
+   - Processes updates in batches for efficiency
+   - Reports success and failure counts for each batch
+
+2. **View Enriched Data**:
+   ```bash
+   python src/view_enriched_schools.py
+   ```
+   - Connects directly to Supabase to get enriched schools
+   - Displays the enriched school data in a formatted table
+   - Shows detailed information for each school
+   - Falls back to local results files if Supabase connection fails
+
+### 4. Automated Batch Processing
+
+For processing multiple batches of schools:
+```bash
+python src/batch_process.py --batch_size 5 --timeout 300 --batches 3
+```
+- Processes 3 batches of 5 schools each
+- Uses a timeout of 300 seconds per batch
+- Automatically handles all the steps in the workflow
+- Skips schools that have already been processed
+
+You can also use the direct processing script for testing:
+```bash
+python direct_process.py --batch_size 5
+```
+- Uses sample data instead of connecting to Supabase
+- Tracks processed schools in the SQLite database
+- Creates properly formatted JSON files
+- Useful for testing the tracking system without using API calls
+
+Running the Project
+------------------
+
+### Basic Usage
+
+1. **Prepare Schools for Processing**:
+   ```bash
+   python process_supabase_schools.py --batch_size 5
+   ```
+   This will:
+   - Get 5 unprocessed schools from Supabase
+   - Create input files for the CrewAI system
+   - Mark these schools as processed to avoid duplicates
+   - Track processed schools in the SQLite database
+
+2. **Run the CrewAI System**:
+   ```bash
+   python -m dbenc.main run --batch_size 5 --timeout 300
+   ```
+   This will:
+   - Process the schools using the CrewAI agents (researcher, scraper, geocoder, reporter)
+   - Enrich the school data with additional information
+   - Generate results files with the enriched data
+   - Use the schools prepared in the previous step
+
+3. **Extract School Data**:
+   ```bash
+   python src/extract_school_data.py
+   ```
+   This will:
+   - Extract enriched school data from the results
+   - Skip schools that have already been processed
+   - Create a repaired JSON file with the extracted data
+   - If no schools are found in the results, get unprocessed schools directly from Supabase
+
+4. **Update the Database**:
+   ```bash
+   # Find the latest repaired JSON file
+   latest_file=$(ls -t repaired_school_updates_*.json | head -1)
+
+   # Update the database
+   python src/update_db_schools.py $latest_file
+   ```
+   This will:
+   - Update the Supabase database with the enriched data
+   - Use robust error handling with retry mechanisms
+   - Process updates in batches for efficiency
+   - Report detailed success and failure counts
+
+5. **View Results**:
+   ```bash
+   # View enriched schools directly from Supabase
+   python src/view_enriched_schools.py
+
+   # View processed schools from the tracking database
+   python process_supabase_schools.py --view-processed
+   ```
+
+### Automated Batch Processing
+
+To automate the entire workflow for multiple batches:
+```bash
+python src/batch_process.py --batch_size 5 --timeout 300 --batches 3
+```
+This will:
+- Process 3 batches of 5 schools each
+- Handle all steps automatically (preparation, processing, extraction, database update)
+- Skip schools that have already been processed
+- Report progress and results for each batch
+
+Command Line Arguments
+--------------------
+- `run`: Run the data enrichment process
+- `--batch_size`: Number of schools to process in each batch (default: 5)
+- `--timeout`: Timeout in seconds for crew execution (default: 300)
+- `--output_file`: File to save results (default: results_TIMESTAMP.json)
+- `--view-processed`: View all processed schools (for process_supabase_schools.py)
+- `--batches`: Number of batches to process (for batch_process.py)
+
+Tracking Processed Schools
+-------------------------
+
+The system uses a SQLite database (`processed_schools.db`) to track which schools have been processed:
+
+1. **Database Structure**:
+   - `school_id`: Primary key, the unique identifier for the school
+   - `school_name`: The name of the school
+   - `processed_date`: When the school was processed
+   - `batch_file`: Which batch file the school was part of
+
+2. **Tracking Functions**:
+   - `init_processed_schools_db()`: Initializes the database
+   - `is_school_processed()`: Checks if a school has already been processed
+   - `mark_school_as_processed()`: Marks a school as processed
+   - `view_processed_schools()`: Displays all processed schools
+
+3. **Benefits**:
+   - Prevents duplicate processing of schools
+   - Provides a history of processed schools
+   - Makes the system more efficient
+
+Monitoring and Reporting
+-----------------------
+
+### Check Processed Schools
+```bash
+python process_supabase_schools.py --view-processed
+```
+
+This will show:
+- All schools that have been processed
+- When they were processed
+- Which batch file they came from
+
+### View Enriched Schools
+```bash
+python src/view_enriched_schools.py
+```
+
+This will show:
+- Schools that have been successfully enriched
+- Detailed information for each school
+- Geographic coordinates and other enriched fields
+
+### Check Database Update Results
+```bash
+# Find the latest results file
+latest_file=$(ls -t results_*.json | head -1)
+
+# View the results
+cat $latest_file
+```
+
+Troubleshooting
+--------------
+
+If you encounter issues:
+
+1. **Check logs** for error messages
+
+2. **Verify API keys** are correct in the `.env` file:
+   ```
+   OPENAI_API_KEY=your_openai_api_key
+   SUPABASE_URL=your_supabase_url
+   SUPABASE_KEY=your_supabase_key
+   SUPABASE_ANON_KEY=your_supabase_anon_key
+   MODEL=gpt-4
+   ```
+
+3. **Ensure dependencies** are installed:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Adjust timeout settings** if operations are timing out:
+   ```bash
+   python -m dbenc.main run --batch_size 5 --timeout 600  # Increase timeout to 10 minutes
+   ```
+
+5. **Check database connection** if updates fail:
+   ```bash
+   # Test Supabase connection
+   python -c "import os; from dotenv import load_dotenv; import requests; load_dotenv(); print(f'SUPABASE_URL: {os.getenv(\'SUPABASE_URL\')}'); print(f'SUPABASE_KEY: {os.getenv(\'SUPABASE_KEY\')[0:5]}...')"
+   ```
+
+6. **Reset processed schools tracking** if needed:
+   ```bash
+   # Remove the processed_schools.db file
+   rm processed_schools.db
+   ```
+
+Recent Improvements
+------------------
+
+1. **Integrated Supabase MCP (Model Context Protocol)**:
+   - Added configuration files for VS Code, Cursor, and Claude AI tools
+   - Created documentation for MCP setup and usage
+   - Added example prompts for AI-assisted database operations
+   - Created test script for verifying MCP connection
+
+2. **Implemented Tracking System for Processed Schools**:
+   - Created a SQLite database to track processed schools
+   - Added functions to check if a school has already been processed
+   - Implemented a system to mark schools as processed
+   - Added a command to view all processed schools
+
+3. **Added Robust Error Handling**:
+   - Implemented retry mechanisms with exponential backoff
+   - Added safe execution wrappers for database operations
+   - Created batch processing with detailed error tracking
+   - Improved resilience against API failures
+
+4. **Optimized Timeout Settings**:
+   - Increased default timeout from 60 seconds to 300 seconds
+   - Added ability to customize timeout for different operations
+   - Implemented proper timeout handling in the CrewAI system
+
+5. **Updated Agent Instructions**:
+   - Fine-tuned instructions for each agent
+   - Added clear guidance on handling different school types
+   - Implemented specific strategies for data enrichment
+   - Fixed agent name inconsistencies
+
+6. **Created Comprehensive Documentation**:
+   - Added detailed workflow documentation
+   - Created a quick start guide
+   - Updated README with project structure and usage instructions
+   - Added troubleshooting section with common issues and solutions
+   - Added MCP integration documentation
+
+Next Steps
+---------
+
+1. **Expand MCP Integration**:
+   - Create more example prompts for common operations
+   - Develop custom MCP tools for school data enrichment
+   - Integrate MCP with the CrewAI agents for enhanced capabilities
+   - Use MCP for database schema optimization
+
+2. **Scale Up Processing**:
+   - Increase batch sizes to process more schools at once
+   - Monitor performance and adjust timeout settings as needed
+   - Use the batch processing script to automate multiple batches
+
+3. **Implement More Data Sources**:
+   - Add additional sources for school data enrichment
+   - Implement more scraping strategies for different websites
+   - Enhance the geocoding tool with alternative services
+
+4. **Improve Data Validation**:
+   - Add validation for scraped and geocoded data
+   - Implement checks for reasonable values
+   - Add data quality metrics to the reporting
+
+5. **Create a Web Interface**:
+   - Develop a web interface for easier interaction with the system
+   - Add visualizations for enriched data
+   - Implement user authentication and access control
+
+6. **Optimize for Production**:
+   - Implement logging for all operations
+   - Add monitoring for system performance
+   - Create deployment scripts for production environments
