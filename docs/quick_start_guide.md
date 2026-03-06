@@ -206,3 +206,4 @@ If you encounter issues:
    ```
 
 For detailed troubleshooting, refer to the main documentation.
+By: Nick 
