@@ -52,8 +52,13 @@ def run(batch_size: int = 1, output_file: str = None, use_mock: bool = True, tim
             with open(schools_file, 'r') as f:
                 all_schools = json.load(f)
         else:
-            # Check if there's a schools_to_process file
-            schools_files = [f for f in os.listdir() if f.startswith("schools_to_process_") and f.endswith(".json")]
+            # Check if there's a schools_to_process file in school_output/
+            search_dir = "school_output" if os.path.isdir("school_output") else "."
+            schools_files = [
+                os.path.join(search_dir, f)
+                for f in os.listdir(search_dir)
+                if f.startswith("schools_to_process_") and f.endswith(".json")
+            ]
 
             if schools_files:
                 # Sort by modification time (newest first)
@@ -105,7 +110,8 @@ def run(batch_size: int = 1, output_file: str = None, use_mock: bool = True, tim
 
         # Save results to a file
         if not output_file:
-            output_file = f"results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            os.makedirs("school_output", exist_ok=True)
+            output_file = os.path.join("school_output", f"results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
 
         with open(output_file, 'w') as f:
             json.dump({"results": results, "total_batches": len(results)}, f, indent=2)

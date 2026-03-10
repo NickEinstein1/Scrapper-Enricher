@@ -440,12 +440,25 @@ dbenc/
 │   ├── extract_school_data.py       # Extract + repair agent output JSON
 │   ├── error_handling.py            # Shared retry and error utilities
 │   └── get_schools_for_processing.py
+├── school_output/                   # All school JSON output files (auto-created)
+│   ├── results_*.json               # Raw CrewAI agent output per run
+│   ├── batch_schools_*.json         # Batch processing output files
+│   ├── real_school_*.json           # Single real-school run output
+│   ├── single_school_*.json         # Single school processing output
+│   ├── schools_to_process_*.json    # Batches prepared from Supabase
+│   ├── temp_batch_*.json            # Temporary batch files (auto-cleaned)
+│   └── processed_schools.json       # Deduplication tracker
+├── repair_output/                   # Repaired/cleaned school JSON (auto-created)
+│   └── repaired_school_updates_*.json  # Validated payloads ready for DB upload
 ├── docs/
 │   ├── comprehensive_guide.md       # Full guide with code examples
 │   ├── quick_start_guide.md         # Quick reference
 │   ├── school_data_enrichment_workflow.md
 │   ├── supabase_mcp_integration.md  # MCP server setup deep-dive
-│   └── supabase_mcp_prompts.md      # Example MCP prompts
+│   ├── supabase_mcp_prompts.md      # Example MCP prompts
+│   ├── architecture_explanation.md  # System architecture deep-dive
+│   ├── CHANGELOG.md                 # Change history
+│   └── …other architecture docs
 ├── process_supabase_schools.py      # Fetch & prepare school batches from Supabase
 ├── run_batch_schools.py             # Optimised batch runner with context window management
 ├── continuous_processing.py         # Infinite processing loop for large datasets

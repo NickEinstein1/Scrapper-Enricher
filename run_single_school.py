@@ -74,7 +74,8 @@ if __name__ == "__main__":
 
     # Generate a timestamp for the output file
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    output_file = f"single_school_{timestamp}.json"
+    os.makedirs("school_output", exist_ok=True)
+    output_file = os.path.join("school_output", f"single_school_{timestamp}.json")
 
     logger.info(f"Starting School Data Enrichment with a SINGLE SCHOOL")
     logger.info(f"School: {selected_school['school_name']}")

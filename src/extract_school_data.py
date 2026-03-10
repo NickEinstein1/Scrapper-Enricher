@@ -39,8 +39,15 @@ def mark_school_as_processed(conn, school_id, school_name, batch_file):
     conn.commit()
 
 def find_latest_results_file():
-    """Find the most recent results file"""
-    result_files = [f for f in os.listdir() if f.startswith('results_') and f.endswith('.json')]
+    """Find the most recent results file in school_output/"""
+    search_dir = "school_output"
+    if not os.path.isdir(search_dir):
+        search_dir = "."
+    result_files = [
+        os.path.join(search_dir, f)
+        for f in os.listdir(search_dir)
+        if f.startswith('results_') and f.endswith('.json')
+    ]
     if not result_files:
         return None
 
@@ -157,7 +164,8 @@ def extract_school_data(input_file):
 
     # Save the repaired JSON
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    output_file = f"repaired_school_updates_{timestamp}.json"
+    os.makedirs("repair_output", exist_ok=True)
+    output_file = os.path.join("repair_output", f"repaired_school_updates_{timestamp}.json")
 
     with open(output_file, 'w') as f:
         json.dump(repaired_json, f, indent=2)

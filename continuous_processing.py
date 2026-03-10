@@ -41,7 +41,7 @@ MAX_SCHOOLS_PER_RUN = 50
 TIMEOUT = 600
 WAIT_BETWEEN_RUNS = 60  # seconds
 MAX_RUNS = 100  # Set to 0 for unlimited runs
-PROCESSED_SCHOOLS_FILE = "processed_schools.json"
+PROCESSED_SCHOOLS_FILE = os.path.join("school_output", "processed_schools.json")
 
 # Parse command line arguments
 def parse_args():

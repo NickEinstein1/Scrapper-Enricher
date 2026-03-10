@@ -25,7 +25,7 @@ from src.dbenc.main import run
 from src.dbenc.tools.supabase_tool import SupabaseTool
 
 # File to track processed schools
-PROCESSED_SCHOOLS_FILE = "processed_schools.json"
+PROCESSED_SCHOOLS_FILE = os.path.join("school_output", "processed_schools.json")
 
 def load_processed_schools():
     """Load the list of already processed schools"""
@@ -75,10 +75,11 @@ def process_batch(schools, batch_size, use_mock=False, timeout=300):
 
     # Generate a timestamp for the output file
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    output_file = f"batch_schools_{timestamp}.json"
+    os.makedirs("school_output", exist_ok=True)
+    output_file = os.path.join("school_output", f"batch_schools_{timestamp}.json")
 
     # Create a temporary file with just these schools
-    temp_schools_file = f"temp_batch_{timestamp}.json"
+    temp_schools_file = os.path.join("school_output", f"temp_batch_{timestamp}.json")
     with open(temp_schools_file, 'w') as f:
         json.dump(schools, f, indent=2)
         logger.info(f"Created temporary schools file: {temp_schools_file}")

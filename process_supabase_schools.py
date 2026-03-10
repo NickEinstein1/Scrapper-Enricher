@@ -166,7 +166,8 @@ def process_schools(batch_size=5):
 
     # Save the unprocessed schools to a file
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    schools_file = f"schools_to_process_{timestamp}.json"
+    os.makedirs("school_output", exist_ok=True)
+    schools_file = os.path.join("school_output", f"schools_to_process_{timestamp}.json")
 
     with open(schools_file, 'w') as f:
         json.dump(unprocessed_schools, f, indent=2)
@@ -197,7 +198,8 @@ def process_schools(batch_size=5):
         print(f"School {school_name} marked as processed")
 
     # Save the repaired JSON
-    repaired_file = f"repaired_school_updates_{timestamp}.json"
+    os.makedirs("repair_output", exist_ok=True)
+    repaired_file = os.path.join("repair_output", f"repaired_school_updates_{timestamp}.json")
     with open(repaired_file, 'w') as f:
         json.dump(repaired_json, f, indent=2)
 

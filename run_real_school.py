@@ -85,7 +85,8 @@ if __name__ == "__main__":
 
     # Generate a timestamp for the output file
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    output_file = f"real_school_{timestamp}.json"
+    os.makedirs("school_output", exist_ok=True)
+    output_file = os.path.join("school_output", f"real_school_{timestamp}.json")
 
     logger.info(f"Starting School Data Enrichment with REAL DATA")
     logger.info(f"School: {school['school_name']}")
@@ -94,7 +95,7 @@ if __name__ == "__main__":
 
     try:
         # Create a temporary file with just this school
-        temp_schools_file = f"temp_school_{timestamp}.json"
+        temp_schools_file = os.path.join("school_output", f"temp_school_{timestamp}.json")
         with open(temp_schools_file, 'w') as f:
             json.dump([school], f, indent=2)
 

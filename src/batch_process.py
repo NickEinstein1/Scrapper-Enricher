@@ -20,7 +20,8 @@ def prepare_schools_for_processing(batch_size=5):
 
     # Save schools to a file for processing
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    schools_file = f"schools_to_process_{timestamp}.json"
+    os.makedirs("school_output", exist_ok=True)
+    schools_file = os.path.join("school_output", f"schools_to_process_{timestamp}.json")
     save_schools_to_file(schools, schools_file)
 
     return schools_file
@@ -43,8 +44,13 @@ def run_batch(batch_size=5, timeout=180):
     print("Extracting school data...")
     subprocess.run(["python", "src/extract_school_data.py"])
 
-    # Find the latest repaired JSON file
-    repaired_files = [f for f in os.listdir() if f.startswith("repaired_school_updates_") and f.endswith(".json")]
+    # Find the latest repaired JSON file in repair_output/
+    repair_dir = "repair_output" if os.path.isdir("repair_output") else "."
+    repaired_files = [
+        os.path.join(repair_dir, f)
+        for f in os.listdir(repair_dir)
+        if f.startswith("repaired_school_updates_") and f.endswith(".json")
+    ]
     if not repaired_files:
         print("No repaired JSON files found")
         return False
