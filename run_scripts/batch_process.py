@@ -42,7 +42,7 @@ def run_batch(batch_size=5, timeout=180):
 
     # Extract school data
     print("Extracting school data...")
-    subprocess.run(["python", "src/extract_school_data.py"])
+    subprocess.run(["python", "run_scripts/extract_school_data.py"])
 
     # Find the latest repaired JSON file in repair_output/
     repair_dir = "repair_output" if os.path.isdir("repair_output") else "."
@@ -61,18 +61,18 @@ def run_batch(batch_size=5, timeout=180):
 
     # Update the database
     print(f"Updating database with {latest_file}...")
-    subprocess.run(["python", "src/update_db_schools.py", latest_file])
+    subprocess.run(["python", "run_scripts/update_db_schools.py", latest_file])
 
     # View the enriched data
     print("Viewing enriched data...")
-    subprocess.run(["python", "src/view_enriched_schools.py"])
+    subprocess.run(["python", "run_scripts/view_enriched_schools.py"])
 
     return True
 
 def view_processed_schools():
     """View all processed schools"""
     print("Viewing all processed schools...")
-    subprocess.run(["python", "src/extract_school_data.py", "--view-processed"])
+    subprocess.run(["python", "run_scripts/extract_school_data.py", "--view-processed"])
 
 if __name__ == "__main__":
     import argparse

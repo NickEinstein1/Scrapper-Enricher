@@ -93,7 +93,7 @@ def main():
         # Simple check to see if the test_mcp_connection.js file exists
         if os.path.exists("test_mcp_connection.js"):
             logger.info("Running MCP connection test...")
-            subprocess.run("node test_mcp_connection.js", shell=True, check=False)
+            subprocess.run("node tests/test_mcp_connection.js", shell=True, check=False)
         else:
             logger.warning("test_mcp_connection.js not found. Make sure the MCP server is running.")
             logger.info("You can start the MCP server with: npx -y @supabase/mcp-server-supabase@latest --access-token=your_access_token")
@@ -116,7 +116,7 @@ def main():
 
         # Run the batch processing script
         logger.info(f"Starting batch processing run {run_count + 1}")
-        cmd = f"python run_batch_schools.py --batch_size={BATCH_SIZE} --max_schools={MAX_SCHOOLS_PER_RUN} --timeout={TIMEOUT}"
+        cmd = f"python run_scripts/run_batch_schools.py --batch_size={BATCH_SIZE} --max_schools={MAX_SCHOOLS_PER_RUN} --timeout={TIMEOUT}"
         logger.info(f"Running command: {cmd}")
 
         try:
