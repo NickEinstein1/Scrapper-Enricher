@@ -5,6 +5,18 @@ __pycache__/
 # MCP config
 .mcp.json
 
+# Editor & IDE folders
+.cursor/
+.vscode/
+.windsurf/
+
+# Database files
+processed_schools.db
+*.db
+
+# Python lock file
+uv.lock
+
 # Node.js
 node_modules/
 
