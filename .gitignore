@@ -5,6 +5,14 @@ __pycache__/
 logs/
 !logs/.gitkeep
 
+# School output JSON files
+school_output/
+!school_output/.gitkeep
+
+# Repair output JSON files
+repair_output/
+!repair_output/.gitkeep
+
 # Environment files
 .env
 .env.*
