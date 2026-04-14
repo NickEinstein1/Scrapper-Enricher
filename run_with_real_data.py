@@ -30,7 +30,8 @@ if __name__ == "__main__":
     
     # Generate a timestamp for the output file
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    output_file = f"real_results_{timestamp}.json"
+    os.makedirs("school_output", exist_ok=True)
+    output_file = os.path.join("school_output", f"real_results_{timestamp}.json")
     
     logger.info(f"Starting School Data Enrichment with REAL DATA")
     logger.info(f"Parameters: batch_size={batch_size}, use_mock={use_mock}, timeout={timeout}")

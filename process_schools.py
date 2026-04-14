@@ -157,11 +157,12 @@ def process_schools(batch_size=5):
     
     # Save the unprocessed schools to a file
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    schools_file = f"schools_to_process_{timestamp}.json"
-    
+    os.makedirs("school_output", exist_ok=True)
+    schools_file = os.path.join("school_output", f"schools_to_process_{timestamp}.json")
+
     with open(schools_file, 'w') as f:
         json.dump(unprocessed_schools, f, indent=2)
-    
+
     print(f"Saved {len(unprocessed_schools)} schools to {schools_file}")
     
     # Process each school
@@ -175,7 +176,7 @@ def process_schools(batch_size=5):
         print(f"\nProcessing school: {school_name} (ID: {school_id})")
         
         # Create a JSON file for this school
-        school_file = f"school_{school_id}_{timestamp}.json"
+        school_file = os.path.join("school_output", f"school_{school_id}_{timestamp}.json")
         with open(school_file, 'w') as f:
             json.dump([school], f, indent=2)
         

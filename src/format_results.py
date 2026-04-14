@@ -3,11 +3,16 @@ import os
 from datetime import datetime
 
 def find_latest_results_file():
-    """Find the most recent results file"""
-    result_files = [f for f in os.listdir() if f.startswith('results_') and f.endswith('.json')]
+    """Find the most recent results file in school_output/"""
+    search_dir = "school_output" if os.path.isdir("school_output") else "."
+    result_files = [
+        os.path.join(search_dir, f)
+        for f in os.listdir(search_dir)
+        if f.startswith('results_') and f.endswith('.json')
+    ]
     if not result_files:
         return None
-    
+
     # Sort by modification time (newest first)
     result_files.sort(key=lambda x: os.path.getmtime(x), reverse=True)
     return result_files[0]
@@ -79,7 +84,8 @@ def format_results(input_file, output_file=None):
     # Save the formatted results
     if output_file is None:
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        output_file = f"formatted_results_{timestamp}.json"
+        os.makedirs("school_output", exist_ok=True)
+        output_file = os.path.join("school_output", f"formatted_results_{timestamp}.json")
     
     with open(output_file, 'w') as f:
         json.dump(formatted_results, f, indent=2)

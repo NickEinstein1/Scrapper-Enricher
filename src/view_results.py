@@ -5,9 +5,14 @@ from datetime import datetime
 from pprint import pprint
 
 def find_latest_results_file(mock=False):
-    """Find the most recent results file"""
-    pattern = "mock_results_*.json" if mock else "results_*.json"
-    result_files = glob.glob(pattern)
+    """Find the most recent results file in school_output/"""
+    search_dir = "school_output" if os.path.isdir("school_output") else "."
+    prefix = "mock_results_" if mock else "results_"
+    result_files = [
+        os.path.join(search_dir, f)
+        for f in os.listdir(search_dir)
+        if f.startswith(prefix) and f.endswith('.json')
+    ]
     if not result_files:
         return None
 

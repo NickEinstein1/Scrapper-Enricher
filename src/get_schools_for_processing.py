@@ -72,7 +72,8 @@ def save_schools_to_file(schools, output_file=None):
     """Save schools to a JSON file for processing"""
     if not output_file:
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        output_file = f"schools_to_process_{timestamp}.json"
+        os.makedirs("school_output", exist_ok=True)
+        output_file = os.path.join("school_output", f"schools_to_process_{timestamp}.json")
     
     with open(output_file, 'w') as f:
         json.dump(schools, f, indent=2)

@@ -23,7 +23,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # File to track processed schools
-PROCESSED_SCHOOLS_FILE = "processed_schools.json"
+PROCESSED_SCHOOLS_FILE = os.path.join("school_output", "processed_schools.json")
 
 def load_processed_schools():
     """Load the list of already processed schools"""
@@ -37,7 +37,7 @@ def load_processed_schools():
 
 def get_batch_results():
     """Get all batch results files"""
-    batch_files = glob.glob("batch_schools_*.json")
+    batch_files = glob.glob(os.path.join("school_output", "batch_schools_*.json"))
     batch_files.sort(key=lambda x: os.path.getmtime(x), reverse=True)
     return batch_files
 

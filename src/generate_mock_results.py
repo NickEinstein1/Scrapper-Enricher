@@ -129,13 +129,15 @@ def generate_mock_results():
 def save_mock_results():
     """Save mock results to a file"""
     results = generate_mock_results()
-    
+
     # Create a filename with the current timestamp
-    filename = f"mock_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-    
+    import os
+    os.makedirs("school_output", exist_ok=True)
+    filename = os.path.join("school_output", f"mock_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
+
     with open(filename, 'w') as f:
         json.dump(results, f, indent=2)
-    
+
     print(f"Mock results saved to {filename}")
     return filename
 

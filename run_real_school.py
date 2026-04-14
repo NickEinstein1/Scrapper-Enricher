@@ -25,7 +25,7 @@ from src.dbenc.main import run
 from src.dbenc.tools.supabase_tool import SupabaseTool
 
 # File to track processed schools
-PROCESSED_SCHOOLS_FILE = "processed_schools.json"
+PROCESSED_SCHOOLS_FILE = os.path.join("school_output", "processed_schools.json")
 
 def load_processed_schools():
     """Load the list of already processed schools"""
