@@ -1,4 +1,4 @@
-# 🏫 School Data Enrichment System
+# Data Enrichment System
 
 > An AI-powered, multi-agent pipeline that automatically discovers, scrapes, geocodes, validates, and persists comprehensive school data into a Supabase database — orchestrated entirely by **CrewAI agents** connected to your database via a **live MCP server**.
 
@@ -29,7 +29,7 @@
 
 ## Overview
 
-The **School Data Enrichment System** solves a critical data completeness problem: school databases often have missing fields such as addresses, enrollment numbers, phone numbers, and GPS coordinates. This system automates filling those gaps by:
+The **Data Enrichment System** solves a critical data completeness problem: school databases often have missing fields such as addresses, enrollment numbers, phone numbers, and GPS coordinates. This system automates filling those gaps by:
 
 1. **Querying** a Supabase database for schools with incomplete records
 2. **Scraping** public school review websites for the missing details
