@@ -11,13 +11,15 @@ import glob
 from datetime import datetime
 import logging
 
+os.makedirs('logs', exist_ok=True)
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler(),
-        logging.FileHandler('monitor_progress.log')
+        logging.FileHandler(os.path.join('logs', 'monitor_progress.log'))
     ]
 )
 logger = logging.getLogger(__name__)

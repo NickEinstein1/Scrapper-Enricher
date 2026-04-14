@@ -1,6 +1,10 @@
 __pycache__/
 .DS_Store
 
+# Log files
+logs/
+!logs/.gitkeep
+
 # Environment files
 .env
 .env.*

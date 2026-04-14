@@ -9,13 +9,15 @@ import argparse
 # Add the project root directory to the Python path
 sys.path.insert(0, os.path.abspath('.'))
 
+os.makedirs('logs', exist_ok=True)
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler(sys.stdout),
-        logging.FileHandler('batch_schools_run.log')
+        logging.FileHandler(os.path.join('logs', 'batch_schools_run.log'))
     ]
 )
 logger = logging.getLogger(__name__)

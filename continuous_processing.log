@@ -1,7 +1,0 @@
-2025-04-25 10:30:25,783 - __main__ - INFO - Starting Continuous School Data Enrichment Processing
-2025-04-25 10:30:25,785 - __main__ - INFO - Configuration: batch_size=2, max_schools_per_run=50, timeout=600
-2025-04-25 10:30:25,785 - __main__ - INFO - Checking if MCP server is running...
-2025-04-25 10:30:25,785 - __main__ - INFO - Running MCP connection test...
-2025-04-25 10:30:32,387 - __main__ - INFO - Run 1: 5 schools processed so far
-2025-04-25 10:30:32,387 - __main__ - INFO - Starting batch processing run 1
-2025-04-25 10:30:32,387 - __main__ - INFO - Running command: python run_batch_schools.py --batch_size=2 --max_schools=50 --timeout=600

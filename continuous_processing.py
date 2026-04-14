@@ -24,13 +24,15 @@ import os
 import sys
 from datetime import datetime
 
+os.makedirs('logs', exist_ok=True)
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler(),
-        logging.FileHandler('continuous_processing.log')
+        logging.FileHandler(os.path.join('logs', 'continuous_processing.log'))
     ]
 )
 logger = logging.getLogger(__name__)
